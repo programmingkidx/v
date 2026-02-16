@@ -769,7 +769,7 @@ pub fn executable() string {
 		current_application := 0
 		path := C._dyld_get_image_name(current_application)
 		if path == C.NULL {
-			panic("Error: _dyld_get_image_name() failed to get path")	
+			return os.executable_fallback()
 		}
 		return unsafe { cstring_to_vstring(path) }
 	}
