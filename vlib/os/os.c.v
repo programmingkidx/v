@@ -767,11 +767,11 @@ pub fn executable() string {
 	}
 	$if macos {
 		current_application := 0
-		path := C._dyld_get_image_name(current_application)
-		if path == C.NULL {
+		const_path := C._dyld_get_image_name(current_application)
+		if const_path == C.NULL {
 			return os.executable_fallback()
 		}
-		return unsafe { cstring_to_vstring(path) }
+		return unsafe { cstring_to_vstring(const_path) }
 	}
 	$if freebsd {
 		bufsize := usize(max_path_buffer_size)
