@@ -7,6 +7,7 @@ import strings
 
 $if macos {
 	#include <mach-o/dyld.h>
+
 	fn C._dyld_get_image_name(image int) &char
 }
 
@@ -769,7 +770,7 @@ pub fn executable() string {
 		current_application := 0
 		const_path := C._dyld_get_image_name(current_application)
 		if const_path == C.NULL {
-			return os.executable_fallback()
+			return executable_fallback()
 		}
 		return unsafe { cstring_to_vstring(const_path) }
 	}
