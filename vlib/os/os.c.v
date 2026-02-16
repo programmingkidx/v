@@ -6,7 +6,8 @@ import strings
 #include <errno.h>
 
 $if macos {
-	#include <libproc.h>
+	#include <mach-o/dyld.h>
+	fn C._dyld_get_image_name(image int) &char
 }
 
 $if freebsd || openbsd {
@@ -765,14 +766,12 @@ pub fn executable() string {
 		return res
 	}
 	$if macos {
-		pid := C.getpid()
-		ret := C.proc_pidpath(pid, &result[0], max_path_len)
-		if ret <= 0 {
-			eprintln('os.executable() failed at calling proc_pidpath with pid: ${pid} . proc_pidpath returned ${ret} ')
-			return executable_fallback()
+		current_application := 0
+		path := C._dyld_get_image_name(current_application)
+		if path == C.NULL {
+			panic("Error: _dyld_get_image_name() failed to get path")	
 		}
-		res := unsafe { tos_clone(&result[0]) }
-		return res
+		return unsafe { cstring_to_vstring(path) }
 	}
 	$if freebsd {
 		bufsize := usize(max_path_buffer_size)
