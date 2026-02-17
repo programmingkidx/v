@@ -8,7 +8,7 @@ import strings
 $if macos {
 	#include <mach-o/dyld.h>
 
-	fn C._dyld_get_image_name(image int) charptr
+	fn C._dyld_get_image_name(image u32) charptr
 }
 
 $if freebsd || openbsd {
