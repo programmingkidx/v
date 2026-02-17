@@ -7,8 +7,8 @@ import strings
 
 $if macos {
 	#include <mach-o/dyld.h>
-
-	fn C._dyld_get_image_name(image u32) charptr
+	// needed for os.executable():
+	fn C._dyld_get_image_name(image u32) &char
 }
 
 $if freebsd || openbsd {
